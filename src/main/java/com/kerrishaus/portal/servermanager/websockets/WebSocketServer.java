@@ -1,22 +1,23 @@
-package com.kerrishaus.portal.servermanager;
+package com.kerrishaus.portal.servermanager.websockets;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 
+import com.kerrishaus.portal.servermanager.servers.minecraft.MinecraftServer;
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
-import org.java_websocket.server.WebSocketServer;
+import org.json.JSONObject;
 
-public class SimpleServer extends WebSocketServer
+public class WebSocketServer extends org.java_websocket.server.WebSocketServer
 {
-    private Server server = null;
+    private MinecraftServer server = null;
 
-    public SimpleServer(InetSocketAddress address)
+    public WebSocketServer(InetSocketAddress address)
     {
         super(address);
 
-        this.server = new Server();
+        this.server = new MinecraftServer();
     }
 
     @Override
@@ -25,9 +26,12 @@ public class SimpleServer extends WebSocketServer
         conn.send("You are connected! My system time is: Y-m-d H:i:s T.");
         conn.send("Here is your server directory:");
 
-        try {
-            conn.send(server.getDirectoryContents().toString());
-        } catch (IOException e) {
+        try
+        {
+            conn.send(new JSONObject().put("files", server.getDirectoryContents()).toString());
+        }
+        catch (IOException e)
+        {
             conn.send("There was an error retrieving the file contents.");
         }
 
@@ -63,6 +67,6 @@ public class SimpleServer extends WebSocketServer
     {
         System.out.println("Server started successfully.");
 
-        server.SetDirectory("/users/kennymccormick/servers/minecraft");
+        server.setDirectory("/users/kennymccormick/servers/minecraft");
     }
 }
