@@ -1,5 +1,6 @@
 package com.kerrishaus.portal.servermanager;
 
+import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 
@@ -9,19 +10,29 @@ import org.java_websocket.server.WebSocketServer;
 
 public class SimpleServer extends WebSocketServer
 {
+    private Server server = null;
+
     public SimpleServer(InetSocketAddress address)
     {
         super(address);
+
+        this.server = new Server();
     }
 
     @Override
     public void onOpen(WebSocket conn, ClientHandshake handshake)
     {
-        conn.send("Welcome to the server!"); // This method sends a message to the new client
-        broadcast( "new connection: " + handshake.getResourceDescriptor() ); // This method sends a message to all clients connected
-        System.out.println("new connection to " + conn.getRemoteSocketAddress());
-    }
+        conn.send("You are connected! My system time is: Y-m-d H:i:s T.");
+        conn.send("Here is your server directory:");
 
+        try {
+            conn.send(server.getDirectoryContents().toString());
+        } catch (IOException e) {
+            conn.send("There was an error retrieving the file contents.");
+        }
+
+        System.out.println("New connection established: " + conn.getRemoteSocketAddress());
+    }
     @Override
     public void onClose(WebSocket conn, int code, String reason, boolean remote)
     {
@@ -51,14 +62,7 @@ public class SimpleServer extends WebSocketServer
     public void onStart()
     {
         System.out.println("Server started successfully.");
-    }
 
-    public static void main(String[] args)
-    {
-        String host = "localhost";
-        int port = 8887;
-
-        WebSocketServer server = new SimpleServer(new InetSocketAddress(host, port));
-        server.run();
+        server.SetDirectory("/users/kennymccormick/servers/minecraft");
     }
 }
