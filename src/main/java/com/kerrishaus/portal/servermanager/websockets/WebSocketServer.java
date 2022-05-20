@@ -24,19 +24,10 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer
     public void onOpen(WebSocket conn, ClientHandshake handshake)
     {
         conn.send("You are connected! My system time is: Y-m-d H:i:s T.");
-        conn.send("Here is your server directory:");
-
-        try
-        {
-            conn.send(new JSONObject().put("files", server.getDirectoryContents()).toString());
-        }
-        catch (IOException e)
-        {
-            conn.send("There was an error retrieving the file contents.");
-        }
 
         System.out.println("New connection established: " + conn.getRemoteSocketAddress());
     }
+
     @Override
     public void onClose(WebSocket conn, int code, String reason, boolean remote)
     {
@@ -46,8 +37,24 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer
     @Override
     public void onMessage(WebSocket conn, String message)
     {
-        conn.send("You said '" + message + "'");
-        System.out.println("received message from "	+ conn.getRemoteSocketAddress() + ": " + message);
+        if (message.equals("logs"))
+            conn.send("{\"cmd\": \"logs\"}");
+        else if (message.equals("files"))
+        {
+            try
+            {
+                JSONObject response = new JSONObject();
+                response.put("cmd", "files");
+                response.put("files", server.getServerFiles());
+                conn.send(response.toString());
+            }
+            catch (IOException e)
+            {
+                conn.send("There was an error retrieving the file contents.");
+            }
+        }
+
+        System.out.println(conn.getRemoteSocketAddress() + ": " + message);
     }
 
     @Override

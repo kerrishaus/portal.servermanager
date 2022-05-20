@@ -1,4 +1,4 @@
-package com.kerrishaus.portal.servermanager.servers.minecraft;
+package com.kerrishaus.portal.servermanager.servers;
 
 import com.kerrishaus.portal.servermanager.utility.FileUtility;
 
@@ -23,5 +23,10 @@ public class Server
     public ArrayList<File> getServerFiles() throws IOException
     {
         return FileUtility.scanDirectory(this.directory);
+    }
+
+    public ArrayList<File> getDirectoryFiles(final String directory) throws IOException
+    {
+        return FileUtility.scanDirectory(directory);
     }
 }

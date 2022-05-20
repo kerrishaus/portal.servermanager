@@ -13,7 +13,6 @@ public final class FileUtility
 
         Files.list(new File(directoryPath).toPath())
                 .forEach(path -> {
-                    System.out.println("File");
                     files.add(new File(path.toString()));
                 });
 
