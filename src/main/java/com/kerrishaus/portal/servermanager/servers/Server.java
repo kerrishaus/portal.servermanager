@@ -1,6 +1,9 @@
 package com.kerrishaus.portal.servermanager.servers;
 
 import com.kerrishaus.portal.servermanager.utility.FileUtility;
+import org.java_websocket.WebSocket;
+import org.java_websocket.handshake.ClientHandshake;
+import org.java_websocket.server.WebSocketServer;
 
 import java.io.File;
 import java.io.IOException;
