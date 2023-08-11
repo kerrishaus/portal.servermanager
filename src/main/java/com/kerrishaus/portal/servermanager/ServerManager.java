@@ -10,62 +10,32 @@ import java.util.Scanner;
 
 // https://stackoverflow.com/questions/18903549/writing-to-inputstream-of-a-java-process
 // https://stackoverflow.com/questions/5711084/java-runtime-getruntime-getting-output-from-executing-a-command-line-program
+// https://stackoverflow.com/questions/12869175/run-another-java-program-from-within-a-java-program-and-get-outputs-send-inputs
 
 public class ServerManager
 {
     public static void main(String[] args) throws IOException, InterruptedException
     {
-        ProcessBuilder builder = new ProcessBuilder("java", "-Xms1G", "-Xmx6G", "-Dlog4j.configurationFile=log4j2.xml", "-jar", "paper-1.18.2-277.jar", "nogui");
-        builder.directory(new File("/Users/kennymccormick/servers/minecraft"));
-        Process process = builder.start();
+        ProcessBuilder pb = new ProcessBuilder("java", "-jar", "BuildTools.jar");
+        pb.directory(new File("/Users/kennymccormick/IdeaProjects/BuildTools/"));
+        pb.redirectErrorStream();
 
-        OutputStream stdin = process.getOutputStream();
-        InputStream stdout = process.getInputStream();
+        InputStream is = null;
+        try {
 
-        Scanner scanner = new Scanner(stdout);
-        while (scanner.hasNextLine())
-        {
-            System.out.println(scanner.nextLine());
-        }
+            Process process = pb.start();
+            is = process.getInputStream();
 
-        /*
-        try
-        {
-            ProcessBuilder builder = new ProcessBuilder("java", "-Xms1G", "-Xmx6G", "-Dlog4j.configurationFile=log4j2.xml", "-jar", "Users/kennymccormick/servers/minecraft/paper.jar", "nogui");
-            Process process = builder.start();
+            int value;
+            while ((value = is.read()) != -1) {
 
-            OutputStream stdin = process.getOutputStream();
-            InputStream stdout = process.getInputStream();
+                char inChar = (char)value;
+                System.out.print(inChar);
 
-            //BufferedReader reader = new BufferedReader(new InputStreamReader(stdout));
-            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(stdin));
-
-            writer.write("Sup buddy\n");
-            writer.flush();
-
-            Scanner scanner = new Scanner(stdout);
-            while (scanner.hasNextLine())
-            {
-                System.out.println(scanner.nextLine());
             }
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
         }
-        catch (IOException exception)
-        {
-            System.out.println("Exception: " + exception.getMessage());
-
-            for (StackTraceElement message : exception.getStackTrace())
-                System.out.println(message);
-        }
-         */
-
-        /*
-        //MinecraftServer s = new MinecraftServer();
-
-        String host = "localhost";
-        int port = 8887;
-
-        WebSocketServer server = new WebSocketServer(new InetSocketAddress(host, port));
-        server.run();
-        */
     }
 }
