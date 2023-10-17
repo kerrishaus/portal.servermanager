@@ -24,9 +24,4 @@ public class Server
     {
         return FileUtility.scanDirectory(this.directory);
     }
-
-    public ArrayList<File> getDirectoryFiles(final String directory) throws IOException
-    {
-        return FileUtility.scanDirectory(directory);
-    }
 }
