@@ -8,12 +8,9 @@ import org.json.JSONObject;
 
 import java.io.*;
 import java.nio.file.Files;
-import java.util.ArrayList;
 
 public class ServerManager
 {
-    public File configuration    = this.workingDirectory;
-
     public static File workingDirectory  = new File(System.getProperty("user.home") + "/.portal/servermanager");
     protected     File configurationFile = new File(ServerManager.workingDirectory.toPath() + "/config.json");
 
