@@ -1,23 +1,17 @@
 package com.kerrishaus.portal.servermanager.websockets;
 
-import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 
-import com.kerrishaus.portal.servermanager.servers.minecraft.MinecraftServer;
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
-import org.json.JSONObject;
 
 public class WebSocketServer extends org.java_websocket.server.WebSocketServer
 {
-    private MinecraftServer server = null;
 
     public WebSocketServer(InetSocketAddress address)
     {
         super(address);
-
-        this.server = new MinecraftServer();
     }
 
     @Override
@@ -25,18 +19,19 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer
     {
         conn.send("You are connected! My system time is: Y-m-d H:i:s T.");
 
-        System.out.println("New connection established: " + conn.getRemoteSocketAddress());
+        System.out.println("New websocket connection established: " + conn.getRemoteSocketAddress());
     }
 
     @Override
     public void onClose(WebSocket conn, int code, String reason, boolean remote)
     {
-        System.out.println("closed " + conn.getRemoteSocketAddress() + " with exit code " + code + " additional info: " + reason);
+        System.out.println("Closed websocket connection " + conn.getRemoteSocketAddress() + " with exit code " + code + ", additional info: " + reason);
     }
 
     @Override
     public void onMessage(WebSocket conn, String message)
     {
+        /*
         if (message.equals("logs"))
             conn.send("{\"cmd\": \"logs\"}");
         else if (message.equals("files"))
@@ -55,6 +50,7 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer
         }
 
         System.out.println(conn.getRemoteSocketAddress() + ": " + message);
+         */
     }
 
     @Override
@@ -66,14 +62,12 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer
     @Override
     public void onError(WebSocket conn, Exception ex)
     {
-        System.err.println("an error occurred on connection " + conn.getRemoteSocketAddress()  + ":" + ex);
+        System.err.println("An error occurred with websocket connection " + conn.getRemoteSocketAddress()  + ":" + ex);
     }
 
     @Override
     public void onStart()
     {
-        System.out.println("Server started successfully.");
-
-        server.setDirectory("/users/kennymccormick/servers/minecraft");
+        System.out.println("WebsocketServer started successfully.");
     }
 }
