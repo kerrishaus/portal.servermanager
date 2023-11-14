@@ -1,11 +1,17 @@
 package com.kerrishaus.portal.servermanager;
 
+import com.kerrishaus.portal.servermanager.servers.Server;
+
 import java.io.*;
 
 public class ServerManager
 {
-    public    File workingDirectory = new File(System.getProperty("user.home") + "/.portal/servermanager");
-    protected File configuration    = this.workingDirectory;
+    public File workingDirectory = new File(System.getProperty("user.home") + "/.portal/servermanager");
+    public File serversDirectory = new File(this.workingDirectory + "/servers");
+
+    public File configuration    = this.workingDirectory;
+
+    public Server[] servers;
 
     public ServerManager() throws IOException
     {
@@ -24,24 +30,38 @@ public class ServerManager
             }
             else
                 System.out.println("Working directory exists: " + this.workingDirectory.getAbsolutePath());
-
-            System.out.println("Loading configuration");
-
-            if (configuration.createNewFile())
-                System.out.println("Configuration file created: " + configuration.getName());
-            else
-                System.out.println("Configuration file already exists.");
         }
         catch(IOException exception)
         {
-            System.out.println("ERROR: Failure loading config: " + exception.getMessage());
+            System.out.println("ERROR: Failure prepping working directory: " + exception.getMessage());
         }
 
         System.out.println("ServerManager is ready.");
     }
 
-    public static void main(String[] args) throws IOException
+    public static void main(String[] args) throws Exception
     {
-        ServerManager sm = new ServerManager();
+        boolean runOnUnsupportedPlatforms = false;
+
+        if (args.length > 0)
+            for (String var : args)
+            {
+                if (var.equalsIgnoreCase("runOnUnsupportedPlatforms"))
+                    runOnUnsupportedPlatforms = true;
+            }
+
+        if (!runOnUnsupportedPlatforms)
+        {
+            final String platform = System.getProperty("os.name").toLowerCase();
+
+            final boolean isLinux = (platform.contains("nix") ||
+                                     platform.contains("nux") ||
+                                     platform.contains("aix"));
+
+            if (!isLinux)
+                throw new Exception("Unsupported platform: " + platform);
+        }
+
+        ServerManager manager = new ServerManager();
     }
 }

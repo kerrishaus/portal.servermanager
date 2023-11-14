@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 public final class FileUtility
 {
-    public static final ArrayList<File> scanDirectory(final String directoryPath) throws IOException
+    public static ArrayList<File> scanDirectory(final String directoryPath) throws IOException
     {
         ArrayList<File> files = new ArrayList<>();
 
@@ -17,5 +17,10 @@ public final class FileUtility
                 });
 
         return files;
+    }
+
+    public static ArrayList<File> getDirectoryFiles(final String directory) throws IOException
+    {
+        return FileUtility.scanDirectory(directory);
     }
 }

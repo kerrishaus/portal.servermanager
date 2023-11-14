@@ -8,7 +8,18 @@ import java.util.ArrayList;
 
 public class Server
 {
-    protected String directory = null;
+    public boolean autostart      = false;
+
+    protected boolean running     = false;
+    protected String  directory   = null;
+    protected String  name        = null;
+    protected String  description = null;
+    protected Integer ownerId     = null;
+
+    public Server(final String directory)
+    {
+        this.setDirectory(directory);
+    }
 
     public void setDirectory(final String directory)
     {
@@ -23,10 +34,5 @@ public class Server
     public ArrayList<File> getServerFiles() throws IOException
     {
         return FileUtility.scanDirectory(this.directory);
-    }
-
-    public ArrayList<File> getDirectoryFiles(final String directory) throws IOException
-    {
-        return FileUtility.scanDirectory(directory);
     }
 }

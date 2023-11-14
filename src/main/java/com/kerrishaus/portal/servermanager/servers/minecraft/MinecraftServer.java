@@ -12,7 +12,7 @@ public class MinecraftServer extends Server
 
     public MinecraftServer()
     {
-        super();
+        super("");
 
         this.setDirectory("/users/kennymccormick/servers/minecraft");
 
